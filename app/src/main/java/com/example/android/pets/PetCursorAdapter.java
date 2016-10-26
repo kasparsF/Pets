@@ -20,14 +20,19 @@ public class PetCursorAdapter extends CursorAdapter {
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         //  return the list item view (instead of null)
-        return LayoutInflater.from(context).inflate(R.layout.list_item, parent, false);
+        View rowView = LayoutInflater.from(context).inflate(
+                R.layout.list_item, parent, false);
+        ViewHolder holder = new ViewHolder();
+        holder.nameText = (TextView) rowView.findViewById(R.id.name);
+        holder.summaryText = (TextView) rowView.findViewById(R.id.summary);
+        rowView.setTag(holder);
+        return rowView;
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         // Find views
-        TextView nameText = (TextView) view.findViewById(R.id.name);
-        TextView summaryText = (TextView) view.findViewById(R.id.summary);
+        ViewHolder holder = (ViewHolder) view.getTag();
         // Find the columns of pet attributes
         int nameColumn = cursor.getColumnIndex(PetContract.PetEntry.COLUMN_PET_NAME);
         int breedColumn = cursor.getColumnIndex(PetContract.PetEntry.COLUMN_PET_BREED);
@@ -42,8 +47,13 @@ public class PetCursorAdapter extends CursorAdapter {
 
 
         //Update the TextViews with attributes
-        nameText.setText(petName);
-        summaryText.setText(petBreed);
+        holder.nameText.setText(petName);
+        holder.summaryText.setText(petBreed);
 
+    }
+
+    private  class ViewHolder {
+        TextView nameText;
+        TextView summaryText;
     }
 }
